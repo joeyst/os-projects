@@ -8,6 +8,7 @@ TARGETS=$(SRCS:.c=)
 
 .PHONY: all clean
 
+.SILENT:
 all: $(TARGETS)
 
 clean:
