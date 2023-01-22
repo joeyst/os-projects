@@ -20,4 +20,11 @@ void read_file(char* file_to_read) {
 
 int main(int argc, char *argv[]) {
   read_file(argv[1]);
+  if (argc > 1) {
+    for (int i = 1; i < argc; i++) {
+      read_file(argv[i]);
+    }
+  } else {
+    
+  }
 }
