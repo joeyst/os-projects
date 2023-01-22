@@ -14,5 +14,11 @@ all: $(TARGETS)
 clean:
 	rm -f $(TARGETS)
 
+run:
+	make clean
+	make all
+	./hello
+	make clean
+
 %: %.c
 	$(CC) $(CCOPTS) -o $@ $< $(LIBS)
