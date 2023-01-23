@@ -8,6 +8,10 @@
 #define MAX_ARGS 128
 #define MAX_CHARS 2048
 
+int run_commands(char** command_args) {
+  execvp(command_args[0], command_args);
+}
+
 int main() {
   while(1) {
     printf("mush$ "); 
@@ -45,6 +49,7 @@ int main() {
     }
 
     //////////////////////
+    run_commands(command_args);
 
   }
   
