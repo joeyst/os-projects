@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define MAX_ARGS 5
+#define MAX_ARGS 128
 #define MAX_CHARS 2048
 
 int main() {
