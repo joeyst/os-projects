@@ -46,8 +46,19 @@ char** get_command_args() {
 }
 
 int run_commands(char** command_args) {
-  execvp(command_args[0], command_args);
-  perror("exec");
+  int err = execvp(command_args[0], command_args);
+  perror("exec: ");
+  if (err == -1) {
+    int curr_index = 0;
+    printf("Found command:");
+    while (command_args[curr_index] != NULL) {
+      printf(" %s", command_args[curr_index]);
+      curr_index++;
+    }
+    printf("\n");
+    fflush(stdout);
+    fflush(stderr);
+  }
   exit(1);
 }
 
