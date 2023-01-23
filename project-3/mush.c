@@ -8,7 +8,18 @@
 #define MAX_ARGS 128
 #define MAX_CHARS 2048
 
+char* get_user_input() {
+  printf("mush$ "); 
+  // Allocating a string that can store user input plus a 
+  // `NULL` character to terminate. 
+  char inp[MAX_CHARS + 1];
+  fflush(stdout);
 
+  fflush(stdout);
+  // I looked it up and (as said here: https://stackoverflow.com/questions/1660228/does-fgets-always-terminate-the-char-buffer-with-0) 
+  // `fgets()` appends a `NULL` character, so that is automatically handled. 
+  fgets(inp, sizeof inp, stdin);
+}
 
 int run_commands(char** command_args) {
   execvp(command_args[0], command_args);
@@ -28,10 +39,7 @@ int get_and_run_command() {
   // `NULL` character to terminate. 
   char inp[MAX_CHARS + 1];
 
-  fflush(stdout);
-  // I looked it up and (as said here: https://stackoverflow.com/questions/1660228/does-fgets-always-terminate-the-char-buffer-with-0) 
-  // `fgets()` appends a `NULL` character, so that is automatically handled. 
-  fgets(inp, sizeof inp, stdin);
+  
 
   char *token;
 
@@ -56,11 +64,11 @@ int get_and_run_command() {
 int main() {
   while(1) {
     get_and_run_command();
-    pid_t fd = fork();
-
-    if (pid_t == 0) {
-      // execvp();
-    }
+    // pid_t fd = fork();
+// 
+    // if (pid_t == 0) {
+    //   // execvp();
+    // }
   }
   
   return 1;
