@@ -8,6 +8,8 @@
 int main() {
   while(1) {
     printf("mush$ "); 
+    char* command_args[256];
+    int command_index = 0;
 
     // Taken from Exploration 3.1: 
     //////////////////////
@@ -22,7 +24,13 @@ int main() {
     if ((token = strtok(inp, " \t\n\r")) != NULL) {
         do {
             printf("Token: \"%s\"\n", token);
+            command_args[command_index] = token;
+            command_index++; 
         } while ((token = strtok(NULL, " \t\n\r")) != NULL);
+    }
+
+    for (int j = 0; j < command_index; j++) {
+      printf("%s\n", command_args[j]);
     }
 
     //////////////////////
