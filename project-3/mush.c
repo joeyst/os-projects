@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 
 #define MAX_ARGS 5
+#define MAX_CHARS 2048
 
 int main() {
   while(1) {
@@ -18,9 +19,13 @@ int main() {
     // Taken from Exploration 3.1: 
     //////////////////////
 
-    char inp[2048];
+    // Allocating a string that can store user input plus a 
+    // `NULL` character to terminate. 
+    char inp[MAX_CHARS + 1];
 
     fflush(stdout);
+    // I looked it up and (as said here: https://stackoverflow.com/questions/1660228/does-fgets-always-terminate-the-char-buffer-with-0) 
+    // `fgets()` appends a `NULL` character, so that is automatically handled. 
     fgets(inp, sizeof inp, stdin);
 
     char *token;
