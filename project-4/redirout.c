@@ -16,5 +16,10 @@ int main(int argc, char *argv[]) {
   printf("file name: %s", file_name);
   fflush(stdout);
 
+  // Opening file. I think we might've covered this already 
+  //  but using `O_TRUNC` from docs here: https://man7.org/linux/man-pages/man2/open.2.html 
+  pid_t file_descriptor = open(file_name, O_TRUNC);
+
+
   return 0;
 }
