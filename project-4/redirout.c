@@ -15,8 +15,6 @@ int main(int argc, char *argv[]) {
   }
 
   char* file_name = strdup(argv[1]);
-  printf("file name: %s", file_name);
-  fflush(stdout);
 
   // Opening file. I think we might've covered this already 
   //  but using `O_TRUNC` from docs here: https://man7.org/linux/man-pages/man2/open.2.html 
@@ -61,6 +59,7 @@ int main(int argc, char *argv[]) {
       write(file_descriptor, read_data, bytes_to_read);
     }
     close(file_descriptor);
+    close(0);
   }
 
   return 0;
