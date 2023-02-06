@@ -20,6 +20,11 @@ int main(int argc, char *argv[]) {
   //  but using `O_TRUNC` from docs here: https://man7.org/linux/man-pages/man2/open.2.html 
   pid_t file_descriptor = open(file_name, O_TRUNC);
 
+  // Creating the pipe 
+  pid_t pfd[2];
+  pipe(pfd);
+  
+
 
   return 0;
 }
