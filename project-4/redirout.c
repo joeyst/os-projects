@@ -36,8 +36,13 @@ int main(int argc, char *argv[]) {
     char** command_and_args = argv + (sizeof(char*) * 2);
     execvp(command_and_args[0], command_and_args);
   }
-  
 
+  // Writing to file 
+  else {
+    // wiring read end to `stdin` + closing read end 
+    dup2(pfd[0], 0);
+    close(pfd[0]);
+  }
 
   return 0;
 }
