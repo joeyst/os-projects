@@ -23,6 +23,19 @@ int main(int argc, char *argv[]) {
   // Creating the pipe 
   pid_t pfd[2];
   pipe(pfd);
+
+  // Running the command 
+  if (file_descriptor == 0) {
+    // wiring write end to `stdout` + closing write end 
+    dup2(pfd[1], 1);
+    close(pfd[1]);
+    // closing reading end 
+    close(pfd[0]);
+    // running the command 
+    // Might need to derefence `argv` 
+    char** command_and_args = argv + (sizeof(char*) * 2);
+    execvp(command_and_args[0], command_and_args);
+  }
   
 
 
