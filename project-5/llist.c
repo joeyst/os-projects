@@ -30,6 +30,14 @@ struct node *node_alloc(int value) {
   return n;
 }
 
+struct node* llist_delete_head(struct node **head) {
+  struct node *new_head = *head;
+  new_head = new_head->next;
+  node_free(*head);
+  *head = new_head;
+  return new_head;
+}
+
 void node_free(struct node *n) {
   free(n);
 }
@@ -64,6 +72,11 @@ int main(int argc, char *argv[])
   llist_insert_tail(&head, head5);
   llist_print(head);
 
-  llist_free(&head);
-  llist_print(head);
+  for (int i = 0; i < 4; i++) {
+    llist_delete_head(&head);
+    llist_print(head);
+  }
+  
+  // llist_free(&head);
+  // llist_print(head);
 }
