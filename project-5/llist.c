@@ -30,8 +30,18 @@ struct node *node_alloc(int value) {
   return n;
 }
 
-void node_free(struct node *node) {
-  free(node);
+void node_free(struct node *n) {
+  free(n);
+}
+
+void llist_free(struct node **head) {
+  struct node *curr_node = *head;
+  while (curr_node != NULL) {
+    struct node *next_node = curr_node->next;
+    node_free(curr_node);
+    curr_node = next_node;
+  }
+  *head = NULL;
 }
 
 int main(int argc, char *argv[])
@@ -41,16 +51,19 @@ int main(int argc, char *argv[])
   node_free(n);
   printf("Freed: %d\n", n->value);
   
-  struct node head1 = {1, NULL};
-  struct node head2 = {2, NULL};
-  struct node head3 = {3, NULL};
-  struct node head4 = {4, NULL};
-  struct node head5 = {5, NULL};
+  struct node *head1 = node_alloc(1);
+  struct node *head2 = node_alloc(2);
+  struct node *head3 = node_alloc(3);
+  struct node *head4 = node_alloc(4);
+  struct node *head5 = node_alloc(5);
 
-  struct node *head = &head1;
-  llist_insert_tail(&head, &head2);
-  llist_insert_tail(&head, &head3);
-  llist_insert_tail(&head, &head4);
-  llist_insert_tail(&head, &head5);
+  struct node *head = head1;
+  llist_insert_tail(&head, head2);
+  llist_insert_tail(&head, head3);
+  llist_insert_tail(&head, head4);
+  llist_insert_tail(&head, head5);
+  llist_print(head);
+
+  llist_free(&head);
   llist_print(head);
 }
