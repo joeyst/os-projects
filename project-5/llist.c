@@ -86,4 +86,13 @@ int main(int argc, char *argv[])
   
   llist_free(&head);
   llist_print(head);
+
+  struct node *head10 = NULL;
+  struct node *n1 = node_alloc(10);
+  llist_insert_head(&head10, n1);
+  llist_print(head10);
+  llist_insert_head(&head10, node_alloc(20));
+  llist_print(head10);
+  llist_insert_tail(&head10, node_alloc(30));
+  llist_print(head10);
 }
