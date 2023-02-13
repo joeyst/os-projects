@@ -105,4 +105,7 @@ int main(int argc, char *argv[])
   llist_print(head11);
   llist_insert_tail(&head11, node_alloc(50));
   llist_print(head11);
+  struct node *head12 = NULL;
+  llist_free(&head12);
+  llist_print(head12);
 }
