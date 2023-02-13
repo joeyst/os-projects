@@ -8,21 +8,33 @@ void llist_insert_head(struct node **head, struct node *n) {
   *head = n;
 }
 
+void llist_insert_tail(struct node **head, struct node *n) {
+  struct node *tail = *head;
+  while (tail->next != NULL) tail = tail->next;
+  tail->next = n;
+}
+
+void llist_print(struct node *head) {
+  struct node *n = head;
+  while (n->next != NULL) {
+    printf("%d -> ", n->value);
+    n = n->next;
+  }
+  printf("%d\n", n->value);
+}
+
 int main(int argc, char *argv[])
 {
-  struct node head;
-  head.value = 1;
-  head.next = NULL;
-  printf("head->value = %d\n", head.value);
-  printf("head->next = %p\n", head.next);
-  
   struct node head1 = {1, NULL};
-  printf("head1->value = %d\n", head1.value);
-  printf("head1->next = %p\n", head1.next);
-  printf("head1 mem addr = %p\n", &head1);
+  struct node head2 = {2, NULL};
+  struct node head3 = {3, NULL};
+  struct node head4 = {4, NULL};
+  struct node head5 = {5, NULL};
 
-  llist_insert_head(&head1.next, &head);
-  printf("head1->value = %d\n", head1.value);
-  printf("head1->next = %p\n", head1.next);
-  printf("head = %p", &head);
+  struct node *head = &head1;
+  llist_insert_tail(&head, &head2);
+  llist_insert_tail(&head, &head3);
+  llist_insert_tail(&head, &head4);
+  llist_insert_tail(&head, &head5);
+  llist_print(head);
 }
