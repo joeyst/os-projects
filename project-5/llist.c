@@ -65,53 +65,7 @@ void llist_free(struct node **head) {
   *head = NULL;
 }
 
-int main(int argc, char *argv[])
-{
-  /*
-    struct node *n = node_alloc(1);
-    printf("Alloc'd: %d\n", n->value);
-    node_free(n);
-    printf("Freed: %d\n", n->value);
-    
-    struct node *head1 = node_alloc(1);
-    struct node *head2 = node_alloc(2);
-    struct node *head3 = node_alloc(3);
-    struct node *head4 = node_alloc(4);
-    struct node *head5 = node_alloc(5);
-
-    struct node *head = head1;
-    llist_insert_tail(&head, head2);
-    llist_insert_tail(&head, head3);
-    llist_insert_tail(&head, head4);
-    llist_insert_tail(&head, head5);
-    llist_print(head);
-
-    for (int i = 0; i < 5; i++) {
-      llist_delete_head(&head);
-      llist_print(head);
-    }
-    
-    llist_free(&head);
-    llist_print(head);
-
-    struct node *head10 = NULL;
-    struct node *n1 = node_alloc(10);
-    llist_insert_head(&head10, n1);
-    llist_print(head10);
-    llist_insert_head(&head10, node_alloc(20));
-    llist_print(head10);
-    llist_insert_tail(&head10, node_alloc(30));
-    llist_print(head10);
-    struct node *head11 = NULL;
-    llist_insert_tail(&head11, node_alloc(40));
-    llist_print(head11);
-    llist_insert_tail(&head11, node_alloc(50));
-    llist_print(head11);
-    struct node *head12 = NULL;
-    llist_free(&head12);
-    llist_print(head12);
-  */
-
+int main(int argc, char *argv[]) {
   struct node *head = NULL;
   for (int i = 1; i < argc; i++) {
     if (strcmp(argv[i], "ih") == 0) {
@@ -135,6 +89,5 @@ int main(int argc, char *argv[])
     else if (strcmp(argv[i], "p") == 0) {
       llist_print(head);
     }
-
   }
 }
