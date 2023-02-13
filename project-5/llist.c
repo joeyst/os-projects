@@ -23,6 +23,13 @@ void llist_print(struct node *head) {
   printf("%d\n", n->value);
 }
 
+struct node *node_alloc(int value) {
+  struct node *n = malloc(sizeof(struct node));
+  n->value = value;
+  n->next = NULL;
+  return n;
+}
+
 int main(int argc, char *argv[])
 {
   struct node head1 = {1, NULL};
