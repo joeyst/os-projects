@@ -15,6 +15,11 @@ void llist_insert_tail(struct node **head, struct node *n) {
 }
 
 void llist_print(struct node *head) {
+  if (head == NULL) {
+    printf("[empty]\n");
+    return;
+  }
+
   struct node *n = head;
   while (n->next != NULL) {
     printf("%d -> ", n->value);
@@ -31,6 +36,8 @@ struct node *node_alloc(int value) {
 }
 
 struct node* llist_delete_head(struct node **head) {
+  if (*head == NULL) return NULL;
+
   struct node *new_head = *head;
   new_head = new_head->next;
   node_free(*head);
@@ -72,11 +79,11 @@ int main(int argc, char *argv[])
   llist_insert_tail(&head, head5);
   llist_print(head);
 
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 5; i++) {
     llist_delete_head(&head);
     llist_print(head);
   }
   
-  // llist_free(&head);
-  // llist_print(head);
+  llist_free(&head);
+  llist_print(head);
 }
