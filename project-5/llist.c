@@ -9,6 +9,11 @@ void llist_insert_head(struct node **head, struct node *n) {
 }
 
 void llist_insert_tail(struct node **head, struct node *n) {
+  if (*head == NULL) {
+    *head = n;
+    return;
+  }
+
   struct node *tail = *head;
   while (tail->next != NULL) tail = tail->next;
   tail->next = n;
@@ -95,4 +100,9 @@ int main(int argc, char *argv[])
   llist_print(head10);
   llist_insert_tail(&head10, node_alloc(30));
   llist_print(head10);
+  struct node *head11 = NULL;
+  llist_insert_tail(&head11, node_alloc(40));
+  llist_print(head11);
+  llist_insert_tail(&head11, node_alloc(50));
+  llist_print(head11);
 }
