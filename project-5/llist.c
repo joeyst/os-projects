@@ -30,8 +30,17 @@ struct node *node_alloc(int value) {
   return n;
 }
 
+void node_free(struct node *node) {
+  free(node);
+}
+
 int main(int argc, char *argv[])
 {
+  struct node *n = node_alloc(1);
+  printf("Alloc'd: %d\n", n->value);
+  node_free(n);
+  printf("Freed: %d\n", n->value);
+  
   struct node head1 = {1, NULL};
   struct node head2 = {2, NULL};
   struct node head3 = {3, NULL};
