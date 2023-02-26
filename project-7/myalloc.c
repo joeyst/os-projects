@@ -48,9 +48,10 @@ void *myalloc(int size) {
       // vvv splitting code vvv
 
       // if the space is big enough to split: 
+      if (is_big_enough_to_split(cur, size)) {
+        // TODO 
+      }
       
-      // TODO 
-
       // ^^^ splitting code ^^^
       cur->in_use = 1;
       return PTR_OFFSET(cur, padded_block_size);
