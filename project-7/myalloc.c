@@ -78,6 +78,11 @@ void *myalloc(int size) {
   return NULL;
 }
 
+void myfree(void *p) {
+  struct block *to_free = p - padded_struct_block_size;
+  to_free->in_use = 0;
+}
+
 void print_data(void)
 {
   struct block *b = head;
