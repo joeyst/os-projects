@@ -14,11 +14,6 @@ struct block {
   int in_use;   // Boolean
 };
 
-struct block* Split_Space(struct block *current_node, int requested_size) {
-  // Add a new struct block with the remaining unused space
-  // Wire it into the linked list
-}
-
 struct block *head = NULL;  // Head of the list, empty
 int padded_struct_block_size = PADDED_SIZE(sizeof(struct block));
 
@@ -36,6 +31,18 @@ bool is_big_enough(struct block *cur, int size) {
 
 bool is_big_enough_to_split(struct block *cur, int size) {
   return cur->size >= get_space_required_for_split(size);
+}
+
+struct block* Split_Space(struct block *current_node, int requested_size) {
+  // Add a new struct block with the remaining unused space
+  struct block *new = PTR_OFFSET(current_node, padded_struct_block_size + PADDED_SIZE(requested_size));
+  new->next = NULL;
+  new->size = current_node->size - PADDED_SIZE(requested_size) - padded_struct_block_size;
+  new->in_use = 0;
+
+  // Wire it into the linked list
+  current_node->next = new;
+  current_node->size = PADDED_SIZE(requested_size);
 }
 
 void *myalloc(int size) {
