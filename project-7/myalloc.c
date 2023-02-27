@@ -19,7 +19,7 @@ bool not_in_use(struct block *cur) {
 }
 
 bool is_big_enough(struct block *cur, int size) {
-  return cur->size >= size;
+  return cur->size >= PADDED_SIZE(size);
 }
 
 bool is_big_enough_to_split(struct block *cur, int size) {
@@ -33,6 +33,10 @@ struct block* Split_Space(current_node, requested_size):
 
 struct block *head = NULL;  // Head of the list, empty
 int padded_struct_block_size = PADDED_SIZE(sizeof(struct block));
+
+int get_space_required_for_split(int size) {
+  return PADDED_SIZE(size) + padded_struct_block_size + 16;
+}
 
 void *myalloc(int size) {
   int padded_block_size = PADDED_SIZE(sizeof(struct block));
