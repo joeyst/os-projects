@@ -81,6 +81,15 @@ void *myalloc(int size) {
 void myfree(void *p) {
   struct block *to_free = p - padded_struct_block_size;
   to_free->in_use = 0;
+  while (to_free->next != NULL) {
+    if (not_in_use(to_free->next)) {
+      to_free->size += to_free->next->size + padded_struct_block_size;
+      to_free->next = to_free->next->next;
+    }
+    else {
+      to_free = to_free->next;
+    }
+  }
 }
 
 void print_data(void)
@@ -107,5 +116,9 @@ void print_data(void)
 }
 
 int main() {
-  
+  void *p;
+
+  p = myalloc(10); print_data();
+
+  myfree(p); print_data();
 }
