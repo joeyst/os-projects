@@ -107,19 +107,5 @@ void print_data(void)
 }
 
 int main() {
-  /*
-  void *p;
-
-  print_data();
-  p = myalloc(64);
-  print_data();
-  */
-
-  void *p;
-
-  print_data();
-  p = myalloc(16);
-  print_data();
-  p = myalloc(16);
-  printf("%p\n", p);
+  
 }
