@@ -73,6 +73,11 @@ int AllocatePage(void)
   return 0xff;
 }
 
+void DeallocatePage(int p)
+{
+  mem[p] = 0;
+}
+
 //
 // Allocate pages for a new process
 //
