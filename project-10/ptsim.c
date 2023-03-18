@@ -105,6 +105,19 @@ void new_process(int proc_num, int page_count)
     }
 }
 
+void KillProcess(int proc_num) 
+{
+  int process_page_table_memory_address = get_page_table(proc_num);
+
+  for (int offset = 0; offset < 64; offset++) {
+    int process_curr_physical_page_number = mem[process_page_table_memory_address + offset]; 
+    if (process_curr_physical_page_number != 0) {
+      DeallocatePage(process_curr_physical_page_number);
+    }
+  }
+  DeallocatePage(process_page_table_memory_address);
+}
+
 //
 // Print the free page map
 //
