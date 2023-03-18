@@ -69,6 +69,14 @@ void StoreValue(int proc_num, int virt_addr, int value) {
     proc_num, virt_addr, phys_addr, value);
 }
 
+int LoadValue(int proc_num, int virt_addr) {
+  int phys_addr = GetPhysicalAddress(proc_num, virt_addr);
+  int value = mem[phys_addr];
+  printf("Load proc %d: %d => %d, value=%d\n",
+    proc_num, virt_addr, phys_addr, value);
+  return value; 
+}
+
 int AllocatePage(void) 
 {
   for (int page_number=0; page_number < PAGE_COUNT; page_number++) {
