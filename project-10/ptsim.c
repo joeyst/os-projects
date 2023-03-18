@@ -62,6 +62,13 @@ int GetPhysicalAddress(int proc_num, int virtual_addr) {
   return get_address(physical_page_number, offset);
 }
 
+void StoreValue(int proc_num, int virt_addr, int value) {
+  int phys_addr = GetPhysicalAddress(proc_num, virt_addr);
+  mem[phys_addr] = value;
+  printf("Store proc %d: %d => %d, value=%d\n",
+    proc_num, virt_addr, phys_addr, value);
+}
+
 int AllocatePage(void) 
 {
   for (int page_number=0; page_number < PAGE_COUNT; page_number++) {
