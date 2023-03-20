@@ -136,7 +136,6 @@ void new_process(int proc_num, int page_count)
 
     for (int virtual_page_number_of_data_page = 0; virtual_page_number_of_data_page < page_count; virtual_page_number_of_data_page++) {
       int process_new_data_page_physical_page_number = AllocatePage();
-      // printf("Process new data page physical page number: %i\n", process_new_data_page_physical_page_number);
       if (process_new_data_page_physical_page_number == 0xff) {
           printf("OOM: proc %d: data page\n", proc_num);
       }
@@ -156,15 +155,6 @@ void KillProcess(int proc_num)
   int process_page_table_physical_page_number = get_page_table(proc_num);
   int process_page_table_memory_address = get_address(process_page_table_physical_page_number, 0);
 
-  // printf("get_page_table(%i); => %i\n", proc_num, get_page_table(proc_num));
-
-  // printf("Process %i page table has page table memory address of %i\n", proc_num, get_page_table(proc_num));
-  // printf("process_page_table_memory_address: %i", process_page_table_memory_address);
-  // for (int offset = 0; offset < 64; offset++) {
-  //   int mem_addr = process_page_table_memory_address + offset;
-  //   printf("Memory address %i: %i\n", mem_addr, mem[mem_addr]);
-  // }
-
   // Iterates through all 64 bytes of that page that hold the process's mappings 
   for (int offset = 0; offset < 64; offset++) {
     // Gets the physical page number at that offset by accessing the original memory 
@@ -172,7 +162,6 @@ void KillProcess(int proc_num)
     int process_curr_physical_page_number = mem[process_page_table_memory_address + offset]; 
     // If that page number isn't `0`, then deallocates it. 
     if (process_curr_physical_page_number != 0) {
-      // printf("DeallocatePage(%i)\n", process_curr_physical_page_number);
       DeallocatePage(process_curr_physical_page_number);
     }
   }
@@ -272,41 +261,3 @@ int main(int argc, char *argv[])
         // TODO: more command line arguments
     }
 }
-
-/*
-Expected output of ./ptsim np 1 2 pfm np 2 3 pfm kp 1 pfm np 3 5 pfm ppt 3 kp 3 pfm 
-
-%  ./ptsim np 1 2 pfm np 2 3 pfm kp 1 pfm np 3 5 pfm ppt 3 kp 3 pfm
---- PAGE FREE MAP ---
-####............          [Zero page and process 1 allocated]
-................
-................
-................
---- PAGE FREE MAP ---
-########........          [And process 2 added on]
-................
-................
-................
---- PAGE FREE MAP ---
-#...####........          [Process 1 killed]
-................
-................
-................
---- PAGE FREE MAP ---
-###########.....          [Process 3 created]
-................
-................
-................
---- PROCESS 3 PAGE TABLE ---
-00 -> 02
-01 -> 03
-02 -> 08                  [See the jump in physical page numbers]
-03 -> 09
-04 -> 0a
---- PAGE FREE MAP ---
-#...####........          [Process 3 killed]
-................
-................
-................
-
-*/
