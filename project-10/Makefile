@@ -12,6 +12,9 @@ all: $(TARGETS)
 clean:
 	rm -f $(TARGETS)
 
+debug:
+	gcc -g ptsim.c -o ptsim
+
 %: %.c
 	$(CC) $(CCOPTS) -o $@ $< $(LIBS)
     

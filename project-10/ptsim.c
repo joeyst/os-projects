@@ -7,8 +7,11 @@
 #define PAGE_SIZE 256  // MUST equal 2^PAGE_SHIFT
 #define PAGE_COUNT 64
 #define PAGE_SHIFT 8  // Shift page number this much
+#define PAGE_MASK (pow(PAGE_SHIFT, 2) - 1)
 
 #define PTP_OFFSET 64 // How far offset in page 0 is the page table pointer table
+
+int verbose = 1;
 
 // Simulated RAM
 unsigned char mem[MEM_SIZE];
@@ -19,6 +22,18 @@ unsigned char mem[MEM_SIZE];
 int get_address(int page, int offset)
 {
     return (page << PAGE_SHIFT) | offset;
+}
+
+int get_physical_page_number_of_process_page_table(int proc_num) {
+  int i = mem[64 + proc_num];
+  if (verbose) {
+    printf("Physical page number of process page table: %i\n", i);
+  }
+  return i;
+}
+
+int get_value_from_page_and_offset(int page, int offset) {
+  return mem[get_address(page, offset)];
 }
 
 //
@@ -38,6 +53,7 @@ void initialize_mem(void)
 unsigned char get_page_table(int proc_num)
 {
     int ptp_addr = get_address(0, PTP_OFFSET + proc_num);
+    printf("mem[%i]: %i\n", ptp_addr, mem[ptp_addr]);
     return mem[ptp_addr];
 }
 
@@ -52,7 +68,7 @@ GetPhysicalAddress(proc_num, virtual_addr):
     Return it
 */
 int GetPhysicalAddress(int proc_num, int virtual_addr) {
-  int virtual_page = virtual_addr >> 8;
+  int virtual_page = virtual_addr >> PAGE_SHIFT;
   int offset = virtual_addr & 255;
 
   int process_page_table_physical_address = get_page_table(proc_num);
@@ -90,6 +106,9 @@ int AllocatePage(void)
 
 void DeallocatePage(int p)
 {
+  if (verbose) {
+    printf("mem[%i] = 0;\n", p);
+  }
   mem[p] = 0;
 }
 
@@ -107,29 +126,46 @@ void new_process(int proc_num, int page_count)
     }
 
     // Set this process's page table pointer in zero page
+    if (verbose) {
+      printf("Process page table physical page number: %i\n", process_page_table_physical_page_number);
+      printf("mem[%i] = %i;\n", 64 + proc_num, process_page_table_physical_page_number);
+    }
     mem[64 + proc_num] = process_page_table_physical_page_number;
 
     for (int virtual_page_number_of_data_page = 0; virtual_page_number_of_data_page < page_count; virtual_page_number_of_data_page++) {
       int process_new_data_page_physical_page_number = AllocatePage();
+      printf("Process new data page physical page number: %i\n", process_new_data_page_physical_page_number);
       if (process_new_data_page_physical_page_number == 0xff) {
           printf("OOM: proc %d: data page\n", proc_num);
       }
 
       int address_to_store_mapping_at = get_address(process_page_table_physical_page_number, virtual_page_number_of_data_page);
+      if (verbose) {
+        printf("Storing physical page %i at index %i of process %i\n", process_new_data_page_physical_page_number, virtual_page_number_of_data_page, proc_num);
+        printf("Address associated: %i\n", address_to_store_mapping_at);
+      }
       mem[address_to_store_mapping_at] = process_new_data_page_physical_page_number;
     }
 }
 
 void KillProcess(int proc_num) 
 {
+  // Gets memory address of the process's page table 
   int process_page_table_memory_address = get_page_table(proc_num);
+  printf("get_page_table(%i); => %i\n", proc_num, get_page_table(proc_num));
 
+  // Iterates through all 64 bytes of that page that hold the process's mappings 
   for (int offset = 0; offset < 64; offset++) {
+    // Gets the physical page number at that offset by accessing the original memory 
+    // address plus the offset. 
     int process_curr_physical_page_number = mem[process_page_table_memory_address + offset]; 
+    // If that page number isn't `0`, then deallocates it. 
     if (process_curr_physical_page_number != 0) {
+      printf("DeallocatePage(%i)\n", process_curr_physical_page_number);
       DeallocatePage(process_curr_physical_page_number);
     }
   }
+  // Deallocates the original page. 
   DeallocatePage(process_page_table_memory_address);
 }
 
@@ -205,6 +241,21 @@ int main(int argc, char *argv[])
           // Adding two to `i` so that the for loop doesn't iterate over the `n` and `m` arguments. 
           i = i + 2;
           new_process(process_number, number_of_pages);
+        }
+
+        else if (strcmp(argv[i], "kp") == 0) {
+          KillProcess(atoi(argv[i + 1]));
+          i = i + 1;
+        }
+
+        else if (strcmp(argv[i], "sb") == 0) {
+          StoreValue(atoi(argv[i + 1]), atoi(argv[i + 2]), atoi(argv[i + 3]));
+          i = i + 3;
+        }
+
+        else if (strcmp(argv[i], "lb") == 0) {
+          LoadValue(atoi(argv[i + 1]), atoi(argv[i + 2]));
+          i = i + 2;
         }
 
         // TODO: more command line arguments
