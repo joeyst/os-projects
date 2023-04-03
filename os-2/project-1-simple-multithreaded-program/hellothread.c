@@ -8,6 +8,8 @@ void* print_numbers(void* thread_name) {
 }
 
 int main() {
+  printf("Launching threads\n");
+
   pthread_t t1;
   pthread_t t2;
 
@@ -16,4 +18,6 @@ int main() {
 
   pthread_join(t2, NULL);
   pthread_join(t1, NULL);
+
+  printf("Threads complete!\n");
 }
