@@ -2,12 +2,18 @@
 #include <stdio.h>
 #include <string.h>
 
-void print_numbers(char* thread_name) {
-  for (int i = 0; i < 5; i++) printf("%s: %i\n", thread_name, i);
+void* print_numbers(void* thread_name) {
+  for (int i = 0; i < 5; i++) printf("%s: %i\n", (char*)thread_name, i);
+  return NULL;
 }
 
 int main() {
   pthread_t t1;
   pthread_t t2;
-  print_numbers("hello");
+
+  pthread_create(&t1, NULL, print_numbers, "thread 1");
+  pthread_create(&t2, NULL, print_numbers, "thread 2");
+
+  pthread_join(t2, NULL);
+  pthread_join(t1, NULL);
 }
