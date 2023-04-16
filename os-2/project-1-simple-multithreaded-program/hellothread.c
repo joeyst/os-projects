@@ -19,5 +19,8 @@ int main() {
   pthread_join(t1, NULL);
   pthread_join(t2, NULL);
 
+  pthread_exit(&t1);
+  pthread_exit(&t2);
+
   printf("Threads complete!\n");
 }
