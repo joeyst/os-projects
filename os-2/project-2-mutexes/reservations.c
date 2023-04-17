@@ -49,7 +49,17 @@ int free_seat(int n)
 
     // TODO
 
-    return 0;  // Change as necessary--included so it will build
+    int return_value;
+    pthread_mutex_lock(&mutex);
+    if (seat_taken[n] == 0) {
+        return_value = -1;
+    } else {
+        seat_taken[n] = 0;
+        seat_taken_count--;
+        return_value = 0;
+    }
+    pthread_mutex_unlock(&mutex);
+    return return_value;  // Change as necessary--included so it will build
 }
 
 int is_free(int n) {
