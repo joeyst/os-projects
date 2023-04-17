@@ -53,13 +53,14 @@ int free_seat(int n)
     int return_value;
     pthread_mutex_lock(&mutex);
     if (seat_taken[n] == 0) {
+        pthread_mutex_unlock(&mutex);
         return_value = -1;
     } else {
         seat_taken[n] = 0;
         seat_taken_count--;
+        pthread_mutex_unlock(&mutex);
         return_value = 0;
     }
-    pthread_mutex_unlock(&mutex);
     return return_value; 
 }
 
