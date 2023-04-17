@@ -25,6 +25,8 @@ int reserve_seat(int n)
     // wasn't already taken.
     
     int return_value;
+    // Locking our mutex bc `seat_taken` is a global that 
+    // is modified in other functions. Hence this is a critical section. 
     pthread_mutex_lock(&mutex);
     if (seat_taken[n] == 1) {
         return_value = -1;
@@ -34,7 +36,7 @@ int reserve_seat(int n)
         return_value = 0;
     }
     pthread_mutex_unlock(&mutex);
-    return return_value;  // Change as necessary--included so it will build
+    return return_value; 
 }
 
 int free_seat(int n)
@@ -47,8 +49,6 @@ int free_seat(int n)
     // This function should also decrement seat_taken_count if the seat
     // wasn't already free.
 
-    // TODO
-
     int return_value;
     pthread_mutex_lock(&mutex);
     if (seat_taken[n] == 0) {
@@ -59,16 +59,17 @@ int free_seat(int n)
         return_value = 0;
     }
     pthread_mutex_unlock(&mutex);
-    return return_value;  // Change as necessary--included so it will build
+    return return_value; 
 }
 
 int is_free(int n) {
     // Returns true if the given seat is available.
 
     pthread_mutex_lock(&mutex);
+    // Getting a 1 value if seat is taken, else 0. 
     int return_val = seat_taken[n] == 0;
     pthread_mutex_unlock(&mutex);
-    return return_val;  // Change as necessary--included so it will build
+    return return_val; 
 }
 
 int verify_seat_count(void) {
@@ -84,12 +85,18 @@ int verify_seat_count(void) {
 
     int count = 0;
 
+    // Locking before the for loop bc each seat taken could be 
+    // modified by a different thread while we're iterating thru 
+    // each seat. 
     pthread_mutex_lock(&mutex);
     // Count all the taken seats
     for (int i = 0; i < seat_count; i++)
         if (seat_taken[i])
             count++;
 
+    // Storing whether the count is correct before unlocking bc 
+    // we need to return after unlocking yet also make sure we 
+    // get the correct `seat_taken_count` value. 
     int return_value = count == seat_taken_count;
     pthread_mutex_unlock(&mutex);
 
