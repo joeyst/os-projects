@@ -11,6 +11,9 @@ int transaction_count;
 
 int seat_taken_count = 0;
 
+// Initializing our mutex 
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
 int reserve_seat(int n)
 {
     // Attempt to reserve seat number n
@@ -21,9 +24,17 @@ int reserve_seat(int n)
     // This function should also increment seat_taken_count if the seat
     // wasn't already taken.
     
-    // TODO
-
-    return 0;  // Change as necessary--included so it will build
+    int return_value;
+    pthread_mutex_lock(&mutex);
+    if (seat_taken[n] == 1) {
+        return_value = -1;
+    } else {
+        seat_taken[n] = 1;
+        seat_taken_count++;
+        return_value = 0;
+    }
+    pthread_mutex_unlock(&mutex);
+    return return_value;  // Change as necessary--included so it will build
 }
 
 int free_seat(int n)
