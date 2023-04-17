@@ -168,4 +168,3 @@ int main(int argc, char *argv[])
     for (int i = 0; i < broker_count; i++)
         pthread_join(thread[i], NULL);
 }
-
