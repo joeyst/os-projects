@@ -84,13 +84,17 @@ int verify_seat_count(void) {
 
     int count = 0;
 
+    pthread_mutex_lock(&mutex);
     // Count all the taken seats
     for (int i = 0; i < seat_count; i++)
         if (seat_taken[i])
             count++;
 
+    int return_value = count == seat_taken_count;
+    pthread_mutex_unlock(&mutex);
+
     // Return true if it's the same as seat_taken_count
-    return count == seat_taken_count;
+    return return_value;
 }
 
 // ------------------- DO NOT MODIFY PAST THIS LINE -------------------
