@@ -29,13 +29,14 @@ int reserve_seat(int n)
     // is modified in other functions. Hence this is a critical section. 
     pthread_mutex_lock(&mutex);
     if (seat_taken[n] == 1) {
+        pthread_mutex_unlock(&mutex);
         return_value = -1;
     } else {
         seat_taken[n] = 1;
         seat_taken_count++;
+        pthread_mutex_unlock(&mutex);
         return_value = 0;
     }
-    pthread_mutex_unlock(&mutex);
     return return_value; 
 }
 
