@@ -38,9 +38,9 @@ void* producer_script(void* arg) {
   int event_id;
 
   for (int i = 0; i < num_events; i++) {
+    event_id = *thread_id * 100 + i;
     sem_wait(spaces);
     sem_wait(mutex);
-    event_id = *thread_id * 100 + i;
     eventbuf_add(buf, event_id);
     sem_post(mutex);
     sem_post(items);
