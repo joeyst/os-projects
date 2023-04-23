@@ -11,6 +11,11 @@ sem_t *items;
 sem_t *mutex;
 sem_t *spaces;
 
+int num_producers; 
+int num_consumers; 
+int num_events; 
+int num_outstanding; 
+
 sem_t *sem_open_temp(const char *name, int value)
 {
     sem_t *sem;
@@ -31,6 +36,10 @@ sem_t *sem_open_temp(const char *name, int value)
 void* producer_script(void* arg) {
   int* id = (int*)arg;
 
+	for (int i = 0; i < ; i++) {
+
+	}
+
   return NULL;
 }
 
@@ -45,17 +54,17 @@ int main(int argc, char* argv[]) {
 
   buf = eventbuf_create();
 
-  int num_producers   = atoi(argv[1]);
-  int num_consumers   = atoi(argv[2]);
-  int num_events      = atoi(argv[3]);
-  int num_outstanding = atoi(argv[4]);
+  num_producers   = atoi(argv[1]);
+  num_consumers   = atoi(argv[2]);
+  num_events      = atoi(argv[3]);
+  num_outstanding = atoi(argv[4]);
 
 	items = sem_open_temp("items", 0);
 	mutex = sem_open_temp("mutex", 1);
 	spaces = sem_open_temp("spaces", num_outstanding);
 
   for (int i = 0; i < num_producers; i++) {
-    pthread_t producer; 
-    pthread_create(&producer, NULL, producer_script, (void*)&i);
+    pthread_t producer_thread; 
+    pthread_create(&producer_thread, NULL, producer_script, (void*)&i);
   }
 }
