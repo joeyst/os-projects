@@ -99,6 +99,8 @@ int main(int argc, char* argv[]) {
   mutex = sem_open_temp("mutex", 1);
   spaces = sem_open_temp("spaces", num_outstanding);
 
+  // Creating a variable to hold the producer threads so that we can 
+  // exit later.
   pthread_t *producers = calloc(sizeof(pthread_t), num_producers);
 
   for (int i = 0; i < num_producers; i++) {
@@ -107,6 +109,8 @@ int main(int argc, char* argv[]) {
     pthread_create(&producers[i], NULL, producer_script, (void*)id);
   }
 
+  // Creating a variable to hold the consumer threads so that we 
+  // can exit later. 
   pthread_t *consumers = calloc(sizeof(pthread_t), num_consumers);
 
   for (int i = 0; i < num_consumers; i++) {
@@ -119,6 +123,8 @@ int main(int argc, char* argv[]) {
     pthread_join(producers[i], NULL);
   }
 
+  // Sending one last signal for each consumer so that they 
+  // awaken to an empty buffer and exit. 
   for (int i = 0; i < num_consumers; i++) {
     sem_post(items);
   }
