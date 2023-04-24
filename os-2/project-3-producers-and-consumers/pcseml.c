@@ -37,26 +37,54 @@ void* producer_script(void* arg) {
   int* thread_id = (int*)arg;
   int event_id;
 
+  // Creating the number of events for this specific producer. 
   for (int i = 0; i < num_events; i++) {
     event_id = *thread_id * 100 + i;
+    // Waiting until there are spaces available and that the producer 
+    // has exclusive access to the buffer. 
     sem_wait(spaces);
     sem_wait(mutex);
+    printf("P%d: adding event %d\n", *thread_id, event_id);
     eventbuf_add(buf, event_id);
+    // Releasing the mutex and posting that there is another item in the buffer. 
     sem_post(mutex);
     sem_post(items);
   }
 
-  return NULL;
+  printf("P%d: exiting\n", *thread_id);
+  pthread_exit(NULL);
 }
 
 void* consumer_script(void* arg) {
   int* id = (int*)arg;
+  int event_id;
 
-  return NULL;
+  // Consuming 
+  while (1) {
+    // Waiting until it is signaled that there is an item 
+    // in the buffer. 
+    sem_wait(items);
+    sem_wait(mutex);
+
+    // If the consumer is awoken and the buffer is empty, 
+    // then we know to release the mutex, print, and exit. 
+    if (eventbuf_empty(buf)) {
+      sem_post(mutex);
+      printf("C%d: exiting\n", *id);
+      pthread_exit(NULL);
+    }
+
+    // Getting the event ID from the buffer and posting for 
+    // the producers. 
+    event_id = eventbuf_get(buf);
+    printf("C%d: got event %d\n", *id, event_id);
+    sem_post(mutex);
+    sem_post(spaces);
+  }
 }
 
 int main(int argc, char* argv[]) {
-  if (argc != 5) printf("Use: # prod, # cons, # events, # outstanding");
+  if (argc != 5) printf("Use: # prod, # cons, # events, # outstanding\n");
 
   buf = eventbuf_create();
 
@@ -69,8 +97,24 @@ int main(int argc, char* argv[]) {
   mutex = sem_open_temp("mutex", 1);
   spaces = sem_open_temp("spaces", num_outstanding);
 
+  pthread_t *producers = calloc(sizeof(pthread_t), num_producers);
+
   for (int i = 0; i < num_producers; i++) {
-    pthread_t producer_thread; 
+    pthread_t producer_thread;
+    producers[i] = producer_thread;
     pthread_create(&producer_thread, NULL, producer_script, (void*)&i);
+  }
+
+  for (int i = 0; i < num_consumers; i++) {
+    pthread_t consumer_thread; 
+    pthread_create(&consumer_thread, NULL, consumer_script, (void*)&i);
+  }
+
+  for (int i = 0; i < num_producers; i++) {
+    pthread_join(producers[i], NULL);
+  }
+
+  for (int i = 0; i < num_consumers; i++) {
+    sem_post(items);
   }
 }
