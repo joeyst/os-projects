@@ -53,6 +53,7 @@ void* producer_script(void* arg) {
 
   printf("P%d: exiting\n", *thread_id);
   pthread_exit(NULL);
+  return NULL;
 }
 
 void* consumer_script(void* arg) {
@@ -72,6 +73,7 @@ void* consumer_script(void* arg) {
       sem_post(mutex);
       printf("C%d: exiting\n", *id);
       pthread_exit(NULL);
+      return NULL;
     }
 
     // Getting the event ID from the buffer and posting for 
@@ -100,14 +102,17 @@ int main(int argc, char* argv[]) {
   pthread_t *producers = calloc(sizeof(pthread_t), num_producers);
 
   for (int i = 0; i < num_producers; i++) {
-    pthread_t producer_thread;
-    producers[i] = producer_thread;
-    pthread_create(&producer_thread, NULL, producer_script, (void*)&i);
+    int *id = malloc(sizeof(int));
+    *id = i;
+    pthread_create(&producers[i], NULL, producer_script, (void*)id);
   }
 
+  pthread_t *consumers = calloc(sizeof(pthread_t), num_consumers);
+
   for (int i = 0; i < num_consumers; i++) {
-    pthread_t consumer_thread; 
-    pthread_create(&consumer_thread, NULL, consumer_script, (void*)&i);
+    int *id = malloc(sizeof(int));
+    *id = i;
+    pthread_create(&consumers[i], NULL, consumer_script, (void*)id);
   }
 
   for (int i = 0; i < num_producers; i++) {
@@ -117,4 +122,9 @@ int main(int argc, char* argv[]) {
   for (int i = 0; i < num_consumers; i++) {
     sem_post(items);
   }
+
+  for (int i = 0; i < num_consumers; i++) {
+    pthread_join(consumers[i], NULL);
+  }
+
 }
