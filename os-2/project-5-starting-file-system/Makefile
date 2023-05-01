@@ -30,3 +30,12 @@ clean:
 
 test: simfs_test
 	./simfs_test
+
+.SILENT: run
+run:
+	make simfs_test
+	./simfs_test
+	make clean 
+	rm -f filename.txt
+	rm -f simfs_test
+	rm -f simfs.a
