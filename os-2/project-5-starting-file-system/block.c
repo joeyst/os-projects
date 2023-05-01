@@ -17,6 +17,7 @@ returning pointer to now not-blank buffer.
 unsigned char *bread(int block_num, unsigned char *block) {
 	lseek(image_fd, block_num * 4096, SEEK_SET);
 	read(image_fd, block, 4096);
+	return block;
 }
 
 /*
@@ -24,5 +25,7 @@ Given not-blank buffer, copy data present in not-blank buffer into
 specified block number's location. 
 */
 void bwrite(int block_num, unsigned char *block) {
-
+	lseek(image_fd, block_num * 4096, SEEK_SET);
+	write(image_fd, block, 4096);
+	return block;
 }
