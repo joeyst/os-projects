@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "free.h"
 
+
 /*
 `lseek`
 https://pubs.opengroup.org/onlinepubs/009696799/functions/lseek.html
@@ -17,8 +18,8 @@ Given blank buffer, copy data present at `block_num` into blank buffer,
 returning pointer to now not-blank buffer. 
 */
 unsigned char *bread(int block_num, unsigned char *block) {
-	lseek(image_fd, block_num * 4096, SEEK_SET);
-	read(image_fd, block, 4096);
+	lseek(image_fd, block_num * BLOCK_SIZE, SEEK_SET);
+	read(image_fd, block, BLOCK_SIZE);
 	return block;
 }
 
@@ -27,12 +28,12 @@ Given not-blank buffer, copy data present in not-blank buffer into
 specified block number's location. 
 */
 void bwrite(int block_num, unsigned char *block) {
-	lseek(image_fd, block_num * 4096, SEEK_SET);
-	write(image_fd, block, 4096);
+	lseek(image_fd, block_num * BLOCK_SIZE, SEEK_SET);
+	write(image_fd, block, BLOCK_SIZE);
 }
 
 int alloc(void) {
-	unsigned char *block = calloc(sizeof(unsigned char), 4096);
+	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(2, block);
 	int free_bit = find_free(block);
 	set_free(block, free_bit, 1);

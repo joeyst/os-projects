@@ -5,7 +5,7 @@
 #include "block.h"
 
 int ialloc(void) {
-	unsigned char *block = calloc(sizeof(unsigned char), 4096);
+	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(1, block);
 	int free_bit = find_free(block);
 	set_free(block, free_bit, 1);

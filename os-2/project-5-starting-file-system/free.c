@@ -19,7 +19,7 @@ int find_low_clear_bit(unsigned char x)
 }
 
 int find_free(unsigned char *block) {
-	for (int i = 0; i < 4096; i++) {
+	for (int i = 0; i < BLOCK_SIZE; i++) {
 		int low_clear_bit = find_low_clear_bit(block[i]);
 		if (low_clear_bit != -1) return (8 * i) + low_clear_bit;
 	}

@@ -19,12 +19,12 @@ void test_block(void) {
 	image_open("image_file.txt", 0);
 	
 	// Writing
-	unsigned char* buf_write = calloc(sizeof(unsigned char), 4096);
+	unsigned char* buf_write = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	memcpy(buf_write, "0123", 4);
 	bwrite(0, buf_write);
 
 	// Reading 
-	unsigned char* buf_read = calloc(sizeof(unsigned char), 4096);
+	unsigned char* buf_read = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(0, buf_read);
 
 	CTEST_ASSERT(memcmp(buf_read, "0123", 4) == 0, "testing read/write");
@@ -35,14 +35,14 @@ void test_block(void) {
 	CTEST_ASSERT(first_free == 0, "test getting first free block");
 	int second_free = alloc();
 	CTEST_ASSERT(second_free == 1, "test getting second free block");
-	unsigned char* block = calloc(sizeof(unsigned char), 4096);
+	unsigned char* block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(2, block);
 	CTEST_ASSERT(block[0] == 0b00000011, "test correct bits marked as taken");
 	image_close();
 }
 
 void test_free(void) {
-	unsigned char* block = calloc(sizeof(unsigned char), 4096);
+	unsigned char* block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	set_free(block, 7, 1);
 	CTEST_ASSERT(block[0] == (1 << 7), "testing setting 7th bit to 1 when previously 0");
 	set_free(block, 7, 0);
@@ -60,7 +60,7 @@ void test_inode(void) {
 	CTEST_ASSERT(first_free == 0, "test getting first free block");
 	int second_free = ialloc();
 	CTEST_ASSERT(second_free == 1, "test getting second free block");
-	unsigned char* block = calloc(sizeof(unsigned char), 4096);
+	unsigned char* block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(2, block);
 	CTEST_ASSERT(block[0] == 0b00000011, "test correct bits marked as taken");
 }
