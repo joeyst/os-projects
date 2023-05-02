@@ -6,9 +6,9 @@
 
 int ialloc(void) {
 	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
-	bread(1, block);
+	bread(FREE_INODE_BLOCK_NUM, block);
 	int free_bit = find_free(block);
-	set_free(block, free_bit, 1);
-	bwrite(1, block);
+	set_free(block, free_bit, SET_TAKEN);
+	bwrite(FREE_INODE_BLOCK_NUM, block);
 	return free_bit;
 }

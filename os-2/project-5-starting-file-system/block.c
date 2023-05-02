@@ -35,7 +35,7 @@ int alloc(void) {
 	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(FREE_DATA_BLOCK_NUM, block);
 	int free_bit = find_free(block);
-	set_free(block, free_bit, 1);
+	set_free(block, free_bit, SET_TAKEN);
 	bwrite(FREE_DATA_BLOCK_NUM, block);
 	return free_bit;
 }

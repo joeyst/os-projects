@@ -27,6 +27,10 @@ simfs_test: simfs_test.c simfs.a
 
 clean:
 	rm -f *.o
+	rm -f filename.txt
+	rm -f simfs_test
+	rm -f simfs.a
+	rm image_file.txt
 
 test: simfs_test
 	./simfs_test
@@ -36,7 +40,4 @@ run:
 	make simfs_test
 	./simfs_test
 	make clean 
-	rm -f filename.txt
-	rm -f simfs_test
-	rm -f simfs.a
-	rm image_file.txt
+	
