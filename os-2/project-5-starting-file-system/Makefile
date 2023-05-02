@@ -21,7 +21,7 @@ mkfs.o: mkfs.c
 	gcc -Wall -Wextra -c $<
 
 simfs_test: simfs_test.c simfs.a
-	gcc -Wall -Wextra -o $@ $^
+	gcc -Wall -Wextra -o $@ $^ -DCTEST_ENABLE 
 
 .PHONY: clean test
 
@@ -39,3 +39,4 @@ run:
 	rm -f filename.txt
 	rm -f simfs_test
 	rm -f simfs.a
+	rm image_file.txt
