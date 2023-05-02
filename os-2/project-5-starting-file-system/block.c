@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include "image.h"
 #include "block.h"
+#include <stdlib.h>
+#include "free.h"
 
 /*
 `lseek`
@@ -30,5 +32,10 @@ void bwrite(int block_num, unsigned char *block) {
 }
 
 int alloc(void) {
-	
+	unsigned char *block = calloc(sizeof(unsigned char), 4096);
+	bread(2, block);
+	int free_bit = find_free(block);
+	set_free(block, free_bit, 1);
+	bwrite(2, block);
+	return free_bit;
 }
