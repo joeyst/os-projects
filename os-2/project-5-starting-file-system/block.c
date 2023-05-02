@@ -28,3 +28,7 @@ void bwrite(int block_num, unsigned char *block) {
 	lseek(image_fd, block_num * 4096, SEEK_SET);
 	write(image_fd, block, 4096);
 }
+
+int alloc(void) {
+	
+}
