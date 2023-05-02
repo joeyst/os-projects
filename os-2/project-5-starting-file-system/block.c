@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include "free.h"
 
-
 /*
 `lseek`
 https://pubs.opengroup.org/onlinepubs/009696799/functions/lseek.html
@@ -34,9 +33,9 @@ void bwrite(int block_num, unsigned char *block) {
 
 int alloc(void) {
 	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
-	bread(2, block);
+	bread(FREE_DATA_BLOCK_NUM, block);
 	int free_bit = find_free(block);
 	set_free(block, free_bit, 1);
-	bwrite(2, block);
+	bwrite(FREE_DATA_BLOCK_NUM, block);
 	return free_bit;
 }
