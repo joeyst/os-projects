@@ -6,8 +6,7 @@
 #include "block.h"
 #include "free.h"
 #include "inode.h"
-
-int image_fd;
+#include "mkfs.h"
 
 #ifdef CTEST_ENABLE
 void test_image(void) {
@@ -64,6 +63,18 @@ void test_inode(void) {
 	bread(2, block);
 	CTEST_ASSERT(block[0] == 0b00000011, "test correct bits marked as taken");
 }
+
+void test_mkfs(void) {
+	image_open("image_file.txt", 0);
+	mkfs();
+	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
+	bread(0, block);
+	CTEST_ASSERT(memcmp(block, "\0\0\0\0", 4) == 0, "testing zeroing in mkfs");
+	int next_free_block = alloc();
+	CTEST_ASSERT(next_free_block == 7, "testing next free block in newly initialized file system is 7");
+	image_close();
+}
+
 #endif
 
 int main() {
@@ -74,6 +85,7 @@ int main() {
 	test_block();
 	test_free();
 	test_inode();
+	test_mkfs();
 
 	CTEST_RESULTS();
 	CTEST_EXIT();
