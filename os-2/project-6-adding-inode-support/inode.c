@@ -18,6 +18,17 @@ int block_offset_bytes = block_offset * INODE_SIZE;
 
 int flags = read_u8(block + block_offset_bytes + 7);
 
+static struct inode incore[MAX_SYS_OPEN_FILES] = {0};
+
+struct inode *find_incore_free(void) {
+	for (int i = 0; i < MAX_SYS_OPEN_FILES; i++) {
+		if (incore[i].flags == 0) {
+			return &incore[i];
+		}
+	}
+	return NULL;
+}
+
 int ialloc(void) {
 	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(FREE_INODE_BLOCK_NUM, block);
