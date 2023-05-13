@@ -30,7 +30,12 @@ int block_offset_bytes_from_inode_num(int inode_num) {
 static struct inode incore[MAX_SYS_OPEN_FILES] = {0};
 
 struct inode *find_incore_free(void) {
-	
+	for (int i = 0; i < MAX_SYS_OPEN_FILES; i++) {
+		if (incore[i].ref_count == 0) {
+			return &incore[i];
+		}
+	}
+	return NULL;
 }
 
 int ialloc(void) {
