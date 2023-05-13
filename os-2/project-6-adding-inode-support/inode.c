@@ -104,6 +104,16 @@ struct inode *iget(int inode_num) {
 	return free_node;
 }
 
+void iput(struct inode *in) {
+	if (in->ref_count == 0) {
+		return;
+	}
+	in->ref_count--;
+	if (in->ref_count == 0) {
+		write_inode(in);
+	}
+}
+
 int ialloc(void) {
 	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(FREE_INODE_BLOCK_NUM, block);
