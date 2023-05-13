@@ -66,7 +66,6 @@ void read_inode(struct inode *in, int inode_num) {
 	for (int i = 0; i < INODE_PTR_COUNT; i++) {
 		in->block_ptr[i] = read_u16(block + block_offset_bytes + 9 + (i * 2));
 	}
-	in->inode_num = inode_num;
 }
 
 void write_inode(struct inode *in) {
@@ -85,6 +84,24 @@ void write_inode(struct inode *in) {
 		write_u16(block + block_offset_bytes + 9 + (i * 2), in->block_ptr[i]);
 	}
 	bwrite(block_num, block);
+}
+
+struct inode *iget(int inode_num) {
+	struct inode *incore_node = find_incore(inode_num);
+	if (incore_node != NULL) {
+		incore_node->ref_count++;
+		return incore_node;
+	}
+
+	struct inode *free_node = find_incore_free();
+	if (free_node == NULL) {
+		return NULL;
+	}
+
+	read_inode(free_node, inode_num);
+	free_node->ref_count = 1;
+	free_node->inode_num = inode_num;
+	return free_node;
 }
 
 int ialloc(void) {
