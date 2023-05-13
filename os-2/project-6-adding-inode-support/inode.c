@@ -10,23 +10,27 @@
 
 #define INODES_PER_BLOCK (BLOCK_SIZE / INODE_SIZE)
 
-int block_num = inode_num / INODES_PER_BLOCK + INODE_FIRST_BLOCK;
+int get_block_num_from_inode_num(int inode_num) {
+	return inode_num / INODES_PER_BLOCK + INODE_FIRST_BLOCK;
+}
 
-int block_offset = inode_num % INODES_PER_BLOCK;
+int get_block_offset_from_inode_num(int inode_num) {
+	return inode_num % INODES_PER_BLOCK;
+}
 
-int block_offset_bytes = block_offset * INODE_SIZE;
+int get_block_offset_bytes_from_block_offset(int block_offset) {
+	return block_offset * INODE_SIZE;
+}
 
-int flags = read_u8(block + block_offset_bytes + 7);
+int block_offset_bytes_from_inode_num(int inode_num) {
+	int block_offset = get_block_offset_from_inode_num(inode_num);
+	return get_block_offset_bytes_from_block_offset(block_offset);
+}
 
 static struct inode incore[MAX_SYS_OPEN_FILES] = {0};
 
 struct inode *find_incore_free(void) {
-	for (int i = 0; i < MAX_SYS_OPEN_FILES; i++) {
-		if (incore[i].flags == 0) {
-			return &incore[i];
-		}
-	}
-	return NULL;
+	
 }
 
 int ialloc(void) {

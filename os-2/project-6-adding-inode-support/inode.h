@@ -5,6 +5,11 @@
 #define INODE_PTR_COUNT 16
 #define MAX_SYS_OPEN_FILES 64
 
+int get_block_num_from_inode_num(int);
+int get_block_offset_from_inode_num(int);
+int get_block_offset_bytes_from_block_offset(int);
+int block_offset_bytes_from_inode_num(int);
+
 struct inode {
     unsigned int size;
     unsigned short owner_id;
