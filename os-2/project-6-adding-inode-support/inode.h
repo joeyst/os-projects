@@ -13,7 +13,7 @@ int block_offset_bytes_from_inode_num(int);
 struct inode {
     unsigned int size;
     unsigned short owner_id;
-    unsigned char persmissions;
+    unsigned char permissions;
     unsigned char flags;
     unsigned char link_count;
     unsigned short block_ptr[INODE_PTR_COUNT];
