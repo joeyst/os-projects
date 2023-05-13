@@ -87,17 +87,20 @@ void write_inode(struct inode *in) {
 }
 
 struct inode *iget(int inode_num) {
+	// Check if inode is already in memory 
 	struct inode *incore_node = find_incore(inode_num);
 	if (incore_node != NULL) {
 		incore_node->ref_count++;
 		return incore_node;
 	}
 
+	// Check if any memory available for inode 
 	struct inode *free_node = find_incore_free();
 	if (free_node == NULL) {
 		return NULL;
 	}
 
+	// If not in memory + memory is available, copy from disk 
 	read_inode(free_node, inode_num);
 	free_node->ref_count = 1;
 	free_node->inode_num = inode_num;
@@ -105,10 +108,17 @@ struct inode *iget(int inode_num) {
 }
 
 void iput(struct inode *in) {
+	// If nothing needs the inode, then it's already been written 
+	// to disk. 
 	if (in->ref_count == 0) {
 		return;
 	}
+	// Otherwise, one less thing needs it, so decrement. 
 	in->ref_count--;
+	// If no things need it now, then write it to disk. 
+	// We don't need to explicitly free the memory/deallocate bc 
+	// when finding this inode again, the data will just be overwritten 
+	// in `iget`. 
 	if (in->ref_count == 0) {
 		write_inode(in);
 	}
