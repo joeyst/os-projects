@@ -4,6 +4,14 @@
 #include <stdlib.h>
 #include "block.h"
 
+#define BLOCK_SIZE 4096
+#define INODE_SIZE 64
+#define INODE_FIRST_BLOCK 3
+
+#define INODES_PER_BLOCK (BLOCK_SIZE / INODE_SIZE)
+
+int block_num = inode_num / INODES_PER_BLOCK + INODE_FIRST_BLOCK;
+
 int ialloc(void) {
 	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(FREE_INODE_BLOCK_NUM, block);
