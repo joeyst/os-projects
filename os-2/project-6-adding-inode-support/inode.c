@@ -37,6 +37,14 @@ struct inode *find_incore_free(void) {
 	}
 	return NULL;
 }
+struct inode *find_incore(unsigned int inode_num){
+	for (int i = 0; i < MAX_SYS_OPEN_FILES;i++){
+		if (incore[i].inode_num == inode_num && incore[i].ref_count != 0){
+			return &incore[i];
+		}
+	}
+	return NULL;
+}
 
 int ialloc(void) {
 	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
