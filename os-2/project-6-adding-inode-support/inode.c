@@ -68,6 +68,10 @@ void read_inode(struct inode *in, int inode_num) {
 	}
 }
 
+void write_inode(struct inode *in) {
+
+}
+
 int ialloc(void) {
 	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(FREE_INODE_BLOCK_NUM, block);
