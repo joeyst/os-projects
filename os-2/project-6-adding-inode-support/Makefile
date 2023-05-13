@@ -33,13 +33,14 @@ clean:
 	rm -f filename.txt
 	rm -f simfs_test
 	rm -f simfs.a
-	rm image_file.txt
+	rm -f image_file.txt
 
 test: simfs_test
 	./simfs_test
 
 .SILENT: run
 run:
+	make clean
 	make simfs_test
 	./simfs_test
 	make clean 

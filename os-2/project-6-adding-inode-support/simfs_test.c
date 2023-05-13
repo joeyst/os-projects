@@ -55,13 +55,14 @@ void test_free(void) {
 
 void test_inode(void) {
 	image_open("image_file.txt", 0);
-	int first_free = ialloc();
+	int first_free = ialloc()->inode_num;
 	CTEST_ASSERT(first_free == 0, "test getting first free block");
-	int second_free = ialloc();
+	int second_free = ialloc()->inode_num;
 	CTEST_ASSERT(second_free == 1, "test getting second free block");
 	unsigned char* block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(2, block);
 	CTEST_ASSERT(block[0] == 0b00000011, "test correct bits marked as taken");
+	image_close();
 }
 
 void test_mkfs(void) {
