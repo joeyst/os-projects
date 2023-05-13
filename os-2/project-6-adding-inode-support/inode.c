@@ -12,6 +12,12 @@
 
 int block_num = inode_num / INODES_PER_BLOCK + INODE_FIRST_BLOCK;
 
+int block_offset = inode_num % INODES_PER_BLOCK;
+
+int block_offset_bytes = block_offset * INODE_SIZE;
+
+int flags = read_u8(block + block_offset_bytes + 7);
+
 int ialloc(void) {
 	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(FREE_INODE_BLOCK_NUM, block);
