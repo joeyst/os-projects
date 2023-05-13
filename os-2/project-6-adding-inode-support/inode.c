@@ -70,7 +70,21 @@ void read_inode(struct inode *in, int inode_num) {
 }
 
 void write_inode(struct inode *in) {
+	int block_num = get_block_num_from_inode_num(in->inode_num);
+	int block_offset_bytes = block_offset_bytes_from_inode_num(in->inode_num);
 
+	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
+	bread(block_num, block);
+
+	write_u32(block + block_offset_bytes, in->size);
+	write_u16(block + block_offset_bytes + 4, in->owner_id);
+	write_u8(block + block_offset_bytes + 6, in->permissions);
+	write_u8(block + block_offset_bytes + 7, in->flags);
+	write_u8(block + block_offset_bytes + 8, in->link_count);
+	for (int i = 0; i < INODE_PTR_COUNT; i++) {
+		write_u16(block + block_offset_bytes + 9 + (i * 2), in->block_ptr[i]);
+	}
+	bwrite(block_num, block);
 }
 
 int ialloc(void) {
