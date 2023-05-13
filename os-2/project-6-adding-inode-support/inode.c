@@ -124,11 +124,34 @@ void iput(struct inode *in) {
 	}
 }
 
-int ialloc(void) {
+struct inode *ialloc(void) {
 	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(FREE_INODE_BLOCK_NUM, block);
 	int free_bit = find_free(block);
 	set_free(block, free_bit, SET_TAKEN);
 	bwrite(FREE_INODE_BLOCK_NUM, block);
-	return free_bit;
+
+	// Could cause error, maybe should move check for if 
+	// free_bit == -1 to before `set_free`. 
+	if (free_bit == -1){
+		return NULL;
+	}
+
+	struct inode* incore = iget(free_bit);
+	if (incore == NULL){
+		return NULL;
+	}
+	incore->size = 0;
+	incore->owner_id = 0;
+	incore->permissions = 0;
+	incore->flags = 0;
+	for (int i = 0; i < INODE_PTR_COUNT; i++){
+		incore->block_ptr[i] = 0;
+	}
+	incore->inode_num = free_bit;
+
+	write_inode(incore);
+
+
+	return incore;
 }
