@@ -11,16 +11,15 @@ int get_block_offset_bytes_from_block_offset(int);
 int block_offset_bytes_from_inode_num(int);
 
 struct inode {
-    unsigned int size;
-    unsigned short owner_id;
-    unsigned char permissions;
-    unsigned char flags;
-    unsigned char link_count;
-    unsigned short block_ptr[INODE_PTR_COUNT];
+	unsigned int size;
+	unsigned short owner_id;
+	unsigned char permissions;
+	unsigned char flags;
+	unsigned char link_count;
+	unsigned short block_ptr[INODE_PTR_COUNT];
 
-    unsigned int ref_count;
-    unsigned int inode_num;
-
+	unsigned int ref_count;
+	unsigned int inode_num;
 };
 
 struct inode *find_incore_free(void);

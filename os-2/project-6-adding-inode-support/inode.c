@@ -149,9 +149,6 @@ struct inode *ialloc(void) {
 		incore->block_ptr[i] = 0;
 	}
 	incore->inode_num = free_bit;
-
 	write_inode(incore);
-
-
 	return incore;
 }
