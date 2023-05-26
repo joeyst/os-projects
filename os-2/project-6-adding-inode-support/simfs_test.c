@@ -65,6 +65,12 @@ void test_inode(void) {
 	image_close();
 }
 
+void test_read_inode_write_inode(void) {
+	image_open("image_file.txt", 0);
+	
+	image_close();
+}
+
 void test_mkfs(void) {
 	image_open("image_file.txt", 0);
 	mkfs();
@@ -86,6 +92,7 @@ int main() {
 	test_block();
 	test_free();
 	test_inode();
+	test_read_inode_write_inode();
 	test_mkfs();
 
 	CTEST_RESULTS();
