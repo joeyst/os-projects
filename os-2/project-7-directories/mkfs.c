@@ -25,6 +25,8 @@
 #define DIRECTORY_ENTRY_SIZE 32 
 #endif  
 
+#define DATA_BLOCK_FROM_OFFSET(offset) (offset / BLOCK_SIZE)
+
 #define START_INDEX_OF_FILE_NAME_IN_DIRECTORY_ENTRY 2 
 
 unsigned char *make_directory_entry(int inode_num, char* name) {
@@ -86,4 +88,18 @@ struct directory *directory_open(int inode_num){
 	directory_struct->offset = 0;
 	return directory_struct;
 
+}
+
+int directory_get(struct directory *dir, struct directory_entry *ent){
+	if(dir->offset >= dir->inode->size){
+		return -1;
+	}
+	int data_block_index = DATA_BLOCK_FROM_OFFSET(dir->offset);
+	int data_block_num = dir->inode->block_ptr[data_block_index];
+	unsigned char *block = calloc(BLOCK_SIZE, sizeof(unsigned char));
+	bread(data_block_num, block);
+	int offset_in_block = dir->offset % BLOCK_SIZE;
+	ent->inode_num = read_u16(block + offset_in_block);
+	strcpy(ent->name, (char *)block + offset_in_block + 2);
+	return 0;
 }
