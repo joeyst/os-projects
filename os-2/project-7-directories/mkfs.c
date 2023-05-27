@@ -103,3 +103,7 @@ int directory_get(struct directory *dir, struct directory_entry *ent){
 	strcpy(ent->name, (char *)block + offset_in_block + 2);
 	return 0;
 }
+void directory_close(struct directory *d){
+	iput(d->inode);
+	free(d);
+}
