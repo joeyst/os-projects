@@ -7,6 +7,7 @@
 #include "free.h"
 #include "inode.h"
 #include "mkfs.h"
+#include "ls.h"
 
 #ifdef CTEST_ENABLE
 void test_image(void) {
@@ -94,6 +95,8 @@ int main() {
 	test_inode();
 	test_read_inode_write_inode();
 	test_mkfs();
+	printf("========================================\n");
+	ls();
 
 	CTEST_RESULTS();
 	CTEST_EXIT();

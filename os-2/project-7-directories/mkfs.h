@@ -15,5 +15,7 @@ struct directory_entry {
     char name[16];
 };
 struct directory *directory_open(int);
+int directory_get(struct directory *, struct directory_entry *);
+void directory_close(struct directory *);
 
 #endif 
