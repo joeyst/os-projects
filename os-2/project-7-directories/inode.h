@@ -27,6 +27,7 @@ struct inode *find_incore(unsigned int);
 void read_inode(struct inode *, int);
 void write_inode(struct inode *);
 struct inode *iget(int inode_num);
+void iput(struct inode *);
 struct inode *ialloc(void);
 
 #endif

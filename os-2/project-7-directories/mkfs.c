@@ -61,9 +61,9 @@ void mkfs(void) {
 	// Allocating some memory to store our data and storing it  
 	unsigned char* block = calloc(BLOCK_SIZE, sizeof(unsigned char));
 	char* parent_name = calloc(3, sizeof(char));
-	parent_name = '..\0';
+	parent_name = "..\0";
 	char* current_name = calloc(3, sizeof(char));
-	current_name = '.\0';
+	current_name = ".\0";
 	unsigned char* parent_entry = make_directory_entry(0, parent_name);
 	unsigned char* current_entry = make_directory_entry(0, current_name);
 	memcpy(block, parent_entry, DIRECTORY_ENTRY_SIZE);
@@ -76,3 +76,14 @@ void mkfs(void) {
 	iput(root);
 }
 
+struct directory *directory_open(int inode_num){
+	struct inode* open_directory = iget(inode_num);
+	if (open_directory == NULL) {
+		return NULL;
+	}
+	struct directory *directory_struct = malloc(sizeof(struct directory));
+	directory_struct->inode = open_directory;
+	directory_struct->offset = 0;
+	return directory_struct;
+
+}

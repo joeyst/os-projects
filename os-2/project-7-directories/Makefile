@@ -2,7 +2,7 @@
 mkfs: simfs.a mkfs.o 
 	gcc -o $@ $^
 
-simfs.a: image.o block.o free.o inode.o mkfs.o pack.o
+simfs.a: image.o block.o free.o inode.o pack.o mkfs.o 
 	ar rcs $@ $^
 
 image.o: image.c

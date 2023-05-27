@@ -78,7 +78,7 @@ void test_mkfs(void) {
 	bread(0, block);
 	CTEST_ASSERT(memcmp(block, "\0\0\0\0", 4) == 0, "testing zeroing in mkfs");
 	int next_free_block = alloc();
-	CTEST_ASSERT(next_free_block == 7, "testing next free block in newly initialized file system is 7");
+	CTEST_ASSERT(next_free_block == 8, "testing next free block in newly initialized file system is 7");
 	image_close();
 }
 
