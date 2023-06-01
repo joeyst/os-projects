@@ -18,5 +18,6 @@ struct directory *directory_open(int);
 int directory_get(struct directory *, struct directory_entry *);
 void directory_close(struct directory *);
 struct inode *namei(char *);
+int directory_make(char *);
 
 #endif 
