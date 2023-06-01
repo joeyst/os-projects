@@ -1,5 +1,6 @@
 
 #include "mkfs.h"
+#include "dirbasename.h"
 #include "block.h"
 #include <stdlib.h>
 #include "image.h"
@@ -113,4 +114,21 @@ struct inode *namei(char *path){
 	}
 	else 
 		return NULL;
+}
+int directory_make(char *path){
+	directory_get(namei(path),get_dirname(path));
+	struct inode *new_dir = ialloc();	//Step 4
+	new_dir->block_ptr[0] = alloc();  //Step 5
+	
+	unsigned char *block = calloc(BLOCK_SIZE, sizeof(unsigned char));					 			//|
+	write_u16(block, [PARENT DIRECTORY NUMBER HERE]);												//|
+	strcpy((char *)&block[START_INDEX_OF_FILE_NAME_IN_DIRECTORY_ENTRY], "..");						//----> Step 6
+	write_u16(block + DIRECTORY_ENTRY_SIZE, new_dir->inode_num);									//|				
+	strcpy((char *)&block[DIRECTORY_ENTRY_SIZE + START_INDEX_OF_FILE_NAME_IN_DIRECTORY_ENTRY], ".");//|
+	
+	new_dir->size = INITIAL_DIRECTORY_SIZE; //Step 7
+	bwrite(new_dir->block_ptr[0], block); //Step 8
+	
+
+
 }
