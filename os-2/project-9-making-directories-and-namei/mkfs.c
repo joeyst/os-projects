@@ -106,3 +106,11 @@ void directory_close(struct directory *d){
 	iput(d->inode);
 	free(d);
 }
+
+struct inode *namei(char *path){
+	if (strcmp(path, "/") == 0) {
+		return iget(ROOT_DIRECTORY_INODE_NUM);
+	}
+	else 
+		return NULL;
+}
