@@ -96,6 +96,7 @@ int main() {
 	test_read_inode_write_inode();
 	test_mkfs();
 	printf("========================================\n");
+	mkfs();
 	ls();
 
 	CTEST_RESULTS();

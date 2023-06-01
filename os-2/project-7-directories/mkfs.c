@@ -7,6 +7,7 @@
 #include "pack.h"
 #include "inode.h"
 #include <string.h>
+#include <stdio.h>
 
 // Not sure where to put these yet-- will move later. 
 #ifndef DIRECTORY_FLAG
@@ -59,23 +60,20 @@ void mkfs(void) {
 	root->size = INITIAL_DIRECTORY_SIZE;
 	root->block_ptr[0] = directory_entry_data_block_id;
 	root->inode_num = ROOT_DIRECTORY_INODE_NUM;
+	root->ref_count = 1;
 
 	// Allocating some memory to store our data and storing it  
 	unsigned char* block = calloc(BLOCK_SIZE, sizeof(unsigned char));
-	char* parent_name = calloc(3, sizeof(char));
-	parent_name = "..\0";
-	char* current_name = calloc(3, sizeof(char));
-	current_name = ".\0";
-	unsigned char* parent_entry = make_directory_entry(0, parent_name);
-	unsigned char* current_entry = make_directory_entry(0, current_name);
-	memcpy(block, parent_entry, DIRECTORY_ENTRY_SIZE);
-	memcpy(block + DIRECTORY_ENTRY_SIZE, current_entry, DIRECTORY_ENTRY_SIZE);
+	write_u16(block, ROOT_DIRECTORY_INODE_NUM + 1);
+	strcpy((char *)&block[START_INDEX_OF_FILE_NAME_IN_DIRECTORY_ENTRY], "..");
+	write_u16(block + DIRECTORY_ENTRY_SIZE, ROOT_DIRECTORY_INODE_NUM);
+	strcpy((char *)&block[DIRECTORY_ENTRY_SIZE + START_INDEX_OF_FILE_NAME_IN_DIRECTORY_ENTRY], ".");
 
 	// Writing it back out to disk with 
 	bwrite(directory_entry_data_block_id, block);
 
 	// Write new directory inode out to disk 
-	iput(root);
+	write_inode(root);
 }
 
 struct directory *directory_open(int inode_num){
