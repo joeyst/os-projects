@@ -153,13 +153,19 @@ int directory_make(char *path){
 	bwrite(new_dir->block_ptr[0], block); // Step 8
 
 	// Getting the block number we'll be writing a directory to 
-	int data_block_num = parent->block_ptr[DATA_BLOCK_FROM_OFFSET(parent->size)]; // Step 9 
+	int parent_data_block_num = parent->block_ptr[DATA_BLOCK_FROM_OFFSET(parent->size)]; // Step 9 
 	// Allocating memory for our block and reading it into memory 
 	unsigned char *parent_block = calloc(BLOCK_SIZE, sizeof(unsigned char)); // Step 10 
-	bread(data_block_num, parent_block);
+	bread(parent_data_block_num, parent_block);
 	// Creating a directory entry for our new directory.
 	int directory_entry_offset = DATA_BLOCK_OFFSET(parent->size);
 	// Writing our new directory as an entry in the parent directory. 
 	write_u16(parent_block + directory_entry_offset, new_dir->inode_num); // Step 10 cont. 
 	strcpy((char *)&parent_block[directory_entry_offset + START_INDEX_OF_FILE_NAME_IN_DIRECTORY_ENTRY], basename);
+		
+	bwrite(parent_data_block_num, parent_block); // Step 11
+	parent->size += DIRECTORY_ENTRY_SIZE; // Step 12
+	iput(new_dir); // Step 13
+	iput(parent); // Step 14
+	return 0;
 }
