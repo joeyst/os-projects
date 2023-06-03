@@ -118,33 +118,33 @@ struct inode *namei(char *path){
 		return NULL;
 }
 int directory_make(char *path){
-	// Getting directory name and new entry name. 
+	// Getting directory name and new entry name.  
 	char *dirname = calloc(MAX_PATH_LENGTH, sizeof(char));
 	char *basename = calloc(MAX_PATH_LENGTH, sizeof(char));
-	get_dirname(path, dirname);
-	get_basename(path, basename);
+	get_dirname(path, dirname); // Step 1 
+	get_basename(path, basename); // Step 2 
 
 	// Getting the inode of the parent directory. // Step 3 
 	struct inode *parent = namei(dirname);
 
 	// Allocating a new inode for our directory. 
-	struct inode *new_dir = ialloc();	//Step 4
+	struct inode *new_dir = ialloc();	// Step 4
 	// Allocating a new data block for our directory (well, the directory's inode). 
 	// The data block will hold directory entries. 
 	// We're setting our first block pointer to point to this data block, 
 	// which we'll write to in step 8. 
-	new_dir->block_ptr[0] = alloc();  //Step 5
+	new_dir->block_ptr[0] = alloc();  // Step 5
 	
-	// Creating a data block to write our entries to. 
-	unsigned char *block = calloc(BLOCK_SIZE, sizeof(unsigned char));					 			//|
+	// Creating a data block to write our entries to. // Step 6
+	unsigned char *block = calloc(BLOCK_SIZE, sizeof(unsigned char));	
 	// Writing our entries to the block. 
-	write_u16(block, [PARENT DIRECTORY NUMBER HERE]);												//|
-	strcpy((char *)&block[START_INDEX_OF_FILE_NAME_IN_DIRECTORY_ENTRY], "..");						//----> Step 6
-	write_u16(block + DIRECTORY_ENTRY_SIZE, new_dir->inode_num);									//|				
-	strcpy((char *)&block[DIRECTORY_ENTRY_SIZE + START_INDEX_OF_FILE_NAME_IN_DIRECTORY_ENTRY], ".");//|
+	write_u16(block, parent->inode_num);	
+	strcpy((char *)&block[START_INDEX_OF_FILE_NAME_IN_DIRECTORY_ENTRY], "..");	
+	write_u16(block + DIRECTORY_ENTRY_SIZE, new_dir->inode_num);	
+	strcpy((char *)&block[DIRECTORY_ENTRY_SIZE + START_INDEX_OF_FILE_NAME_IN_DIRECTORY_ENTRY], "."); 
 	
 	// Initializing our new directory's member variables. 
-	new_dir->size = INITIAL_DIRECTORY_SIZE; //Step 7
+	new_dir->size = INITIAL_DIRECTORY_SIZE; // Step 7
 	// Writing our block to disk. (Our first block pointer points to this block.) 
-	bwrite(new_dir->block_ptr[0], block); //Step 8
+	bwrite(new_dir->block_ptr[0], block); // Step 8
 }
