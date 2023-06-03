@@ -4,6 +4,7 @@
 #include "block.h"
 #include <stdlib.h>
 #include "free.h"
+#include <stdio.h>
 
 /*
 `lseek`
@@ -31,10 +32,18 @@ void bwrite(int block_num, unsigned char *block) {
 	write(image_fd, block, BLOCK_SIZE);
 }
 
+#define DEBUG_PRINT 1 
+
 int alloc(void) {
 	unsigned char *block = calloc(sizeof(unsigned char), BLOCK_SIZE);
 	bread(FREE_DATA_BLOCK_NUM, block);
 	int free_bit = find_free(block);
+	if (free_bit == -1) {
+		if (DEBUG_PRINT) {
+			printf("No free blocks left\n");
+		}
+		return -1;
+	}
 	set_free(block, free_bit, SET_TAKEN);
 	bwrite(FREE_DATA_BLOCK_NUM, block);
 	return free_bit;
