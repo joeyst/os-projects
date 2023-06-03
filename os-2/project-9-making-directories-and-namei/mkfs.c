@@ -161,6 +161,11 @@ int directory_make(char *path){
 	// Writing our block to disk. (Our first block pointer points to this block.) 
 	bwrite(new_dir->block_ptr[0], block); // Step 8
 
+	// Checking if we have space for more entries 
+	if (parent->size + DIRECTORY_ENTRY_SIZE > BLOCK_SIZE * INODE_PTR_COUNT) {
+		return -1;
+	}
+
 	// Getting the block number we'll be writing a directory to 
 	int parent_data_block_num = parent->block_ptr[DATA_BLOCK_FROM_OFFSET(parent->size)]; // Step 9 
 	// Allocating memory for our block and reading it into memory 
