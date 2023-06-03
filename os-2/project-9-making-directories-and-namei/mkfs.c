@@ -128,12 +128,12 @@ int directory_make(char *path){
 	struct inode *parent = namei(dirname);
 
 	// Allocating a new inode for our directory. 
-	struct inode *new_dir = ialloc();	// Step 4
+	struct inode *new_dir = ialloc(); // Step 4
 	// Allocating a new data block for our directory (well, the directory's inode). 
 	// The data block will hold directory entries. 
 	// We're setting our first block pointer to point to this data block, 
 	// which we'll write to in step 8. 
-	new_dir->block_ptr[0] = alloc();  // Step 5
+	new_dir->block_ptr[0] = alloc(); // Step 5
 	
 	// Creating a data block to write our entries to. // Step 6
 	unsigned char *block = calloc(BLOCK_SIZE, sizeof(unsigned char));	
