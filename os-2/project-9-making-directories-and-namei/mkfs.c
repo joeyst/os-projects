@@ -162,10 +162,14 @@ int directory_make(char *path){
 	// Writing our new directory as an entry in the parent directory. 
 	write_u16(parent_block + directory_entry_offset, new_dir->inode_num); // Step 10 cont. 
 	strcpy((char *)&parent_block[directory_entry_offset + START_INDEX_OF_FILE_NAME_IN_DIRECTORY_ENTRY], basename);
-		
+	// Writing the parent's directory entry block back to disk now that the new entry is written. 
 	bwrite(parent_data_block_num, parent_block); // Step 11
+	// Updating the inode's size now that the new entry is written. 
 	parent->size += DIRECTORY_ENTRY_SIZE; // Step 12
+	// Writing the new directory's inode to disk. 
 	iput(new_dir); // Step 13
+	// Writing the parent's inode to disk. 
 	iput(parent); // Step 14
+	// Returning `0` to indicate success. 
 	return 0;
 }
