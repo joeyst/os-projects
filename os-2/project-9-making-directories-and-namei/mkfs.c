@@ -131,6 +131,11 @@ int directory_make(char *path){
 	// Getting the inode of the parent directory. // Step 3 
 	struct inode *parent = namei(dirname);
 
+	// If we weren't able to get an inode from `namei`, return `NULL`. 
+	if (parent == NULL) {
+		return -1;
+	}
+
 	// Allocating a new inode for our directory. 
 	struct inode *new_dir = ialloc(); // Step 4
 	// Allocating a new data block for our directory (well, the directory's inode). 
@@ -138,6 +143,7 @@ int directory_make(char *path){
 	// We're setting our first block pointer to point to this data block, 
 	// which we'll write to in step 8. 
 	int alloced_block = alloc();
+	// If there's no space, return -1. 
 	if (alloced_block == -1) {
 		return -1;
 	}
