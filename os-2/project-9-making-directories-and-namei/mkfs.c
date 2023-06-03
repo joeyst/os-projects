@@ -27,7 +27,11 @@
 #define DIRECTORY_ENTRY_SIZE 32 
 #endif  
 
+// Gets what block number a given offset is in.
 #define DATA_BLOCK_FROM_OFFSET(offset) (offset / BLOCK_SIZE)
+
+// Gets where to start within a block, given an offset. 
+#define DATA_BLOCK_OFFSET(offset) (offset % BLOCK_SIZE)
 
 #define START_INDEX_OF_FILE_NAME_IN_DIRECTORY_ENTRY 2 
 
@@ -147,4 +151,15 @@ int directory_make(char *path){
 	new_dir->size = INITIAL_DIRECTORY_SIZE; // Step 7
 	// Writing our block to disk. (Our first block pointer points to this block.) 
 	bwrite(new_dir->block_ptr[0], block); // Step 8
+
+	// Getting the block number we'll be writing a directory to 
+	int data_block_num = parent->block_ptr[DATA_BLOCK_FROM_OFFSET(parent->size)]; // Step 9 
+	// Allocating memory for our block and reading it into memory 
+	unsigned char *parent_block = calloc(BLOCK_SIZE, sizeof(unsigned char)); // Step 10 
+	bread(data_block_num, parent_block);
+	// Creating a directory entry for our new directory.
+	int directory_entry_offset = DATA_BLOCK_OFFSET(parent->size);
+	// Writing our new directory as an entry in the parent directory. 
+	write_u16(parent_block + directory_entry_offset, new_dir->inode_num); // Step 10 cont. 
+	strcpy((char *)&parent_block[directory_entry_offset + START_INDEX_OF_FILE_NAME_IN_DIRECTORY_ENTRY], basename);
 }

@@ -2,7 +2,7 @@
 mkfs: simfs.a mkfs.o 
 	gcc -o $@ $^
 
-simfs.a: image.o block.o free.o inode.o pack.o mkfs.o ls.o
+simfs.a: image.o block.o free.o inode.o pack.o mkfs.o ls.o dirbasename.o
 	ar rcs $@ $^
 
 image.o: image.c
@@ -24,6 +24,9 @@ pack.o: pack.c
 	gcc -Wall -Wextra -c $<
 
 ls.o: ls.c
+	gcc -Wall -Wextra -c $<
+
+dirbasename.o: dirbasename.c
 	gcc -Wall -Wextra -c $<
 
 simfs_test: simfs_test.c simfs.a
